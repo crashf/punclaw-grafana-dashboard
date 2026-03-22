@@ -1,0 +1,426 @@
+{
+  "dashboard": {
+    "title": "PunClaw Fleet Overview",
+    "uid": "punclaw-fleet",
+    "tags": ["punclaw", "fleet", "agents"],
+    "timezone": "browser",
+    "refresh": "5m",
+    "time": {
+      "from": "now-7d",
+      "to": "now"
+    },
+    "templating": {
+      "list": [
+        {
+          "name": "claw",
+          "type": "custom",
+          "label": "Bot",
+          "query": "Bretts Claw,Mai's Claw,Piotrs Claw,Waynes Claw,punaioff-CEDRIC,punaioff-ROB",
+          "multi": true,
+          "includeAll": true,
+          "allValue": "",
+          "refresh": 0
+        }
+      ]
+    },
+    "panels": [
+      {
+        "id": 1,
+        "title": "Fleet Status",
+        "type": "table",
+        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 0 },
+        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
+        "targets": [
+          {
+            "refId": "A",
+            "type": "json",
+            "source": "url",
+            "url": "http://10.255.245.162:3000/api/grafana/claws",
+            "url_options": { "method": "GET" },
+            "columns": [
+              { "selector": "claw", "text": "Bot", "type": "string" },
+              { "selector": "status", "text": "Status", "type": "string" },
+              { "selector": "cpu", "text": "CPU %", "type": "number" },
+              { "selector": "mem_percent", "text": "Memory %", "type": "number" },
+              { "selector": "disk_percent", "text": "Disk %", "type": "number" },
+              { "selector": "mem_used_gb", "text": "Mem Used (GB)", "type": "number" },
+              { "selector": "disk_used_gb", "text": "Disk Used (GB)", "type": "number" },
+              { "selector": "ip", "text": "IP", "type": "string" },
+              { "selector": "time", "text": "Last Seen", "type": "timestamp" }
+            ],
+            "format": "table"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": { "align": "auto" }
+          },
+          "overrides": [
+            {
+              "matcher": { "id": "byName", "options": "Status" },
+              "properties": [
+                {
+                  "id": "mappings",
+                  "value": [
+                    { "type": "value", "options": { "up": { "text": "🟢 Online", "color": "green" }, "down": { "text": "🔴 Offline", "color": "red" } } }
+                  ]
+                }
+              ]
+            },
+            {
+              "matcher": { "id": "byName", "options": "CPU %" },
+              "properties": [
+                { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "value": null, "color": "green" }, { "value": 70, "color": "yellow" }, { "value": 90, "color": "red" }] } },
+                { "id": "custom.displayMode", "value": "color-background" }
+              ]
+            },
+            {
+              "matcher": { "id": "byName", "options": "Memory %" },
+              "properties": [
+                { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "value": null, "color": "green" }, { "value": 70, "color": "yellow" }, { "value": 90, "color": "red" }] } },
+                { "id": "custom.displayMode", "value": "color-background" }
+              ]
+            },
+            {
+              "matcher": { "id": "byName", "options": "Disk %" },
+              "properties": [
+                { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "value": null, "color": "green" }, { "value": 70, "color": "yellow" }, { "value": 85, "color": "red" }] } },
+                { "id": "custom.displayMode", "value": "color-background" }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": 2,
+        "title": "CPU by Bot",
+        "type": "gauge",
+        "gridPos": { "h": 6, "w": 12, "x": 0, "y": 8 },
+        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
+        "targets": [
+          {
+            "refId": "A",
+            "type": "json",
+            "source": "url",
+            "url": "http://10.255.245.162:3000/api/grafana/claws",
+            "url_options": { "method": "GET" },
+            "columns": [
+              { "selector": "claw", "text": "Bot", "type": "string" },
+              { "selector": "cpu", "text": "CPU", "type": "number" }
+            ],
+            "format": "table"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "max": 100,
+            "min": 0,
+            "unit": "percent",
+            "thresholds": { "mode": "absolute", "steps": [{ "value": null, "color": "green" }, { "value": 70, "color": "yellow" }, { "value": 90, "color": "red" }] }
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Memory by Bot",
+        "type": "gauge",
+        "gridPos": { "h": 6, "w": 12, "x": 12, "y": 8 },
+        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
+        "targets": [
+          {
+            "refId": "A",
+            "type": "json",
+            "source": "url",
+            "url": "http://10.255.245.162:3000/api/grafana/claws",
+            "url_options": { "method": "GET" },
+            "columns": [
+              { "selector": "claw", "text": "Bot", "type": "string" },
+              { "selector": "mem_percent", "text": "Memory", "type": "number" }
+            ],
+            "format": "table"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "max": 100,
+            "min": 0,
+            "unit": "percent",
+            "thresholds": { "mode": "absolute", "steps": [{ "value": null, "color": "green" }, { "value": 70, "color": "yellow" }, { "value": 90, "color": "red" }] }
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Total Tokens by Claw (Daily)",
+        "type": "timeseries",
+        "gridPos": { "h": 10, "w": 24, "x": 0, "y": 14 },
+        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
+        "targets": [
+          {
+            "refId": "A",
+            "type": "json",
+            "source": "url",
+            "url": "http://10.255.245.162:3000/api/grafana/usage",
+            "url_options": { "method": "GET" },
+            "columns": [
+              { "selector": "time", "text": "Time", "type": "timestamp" },
+              { "selector": "claw", "text": "Claw", "type": "string" },
+              { "selector": "total_tokens", "text": "Total Tokens", "type": "number" }
+            ],
+            "format": "timeseries"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "drawStyle": "bars",
+              "fillOpacity": 80,
+              "stacking": { "mode": "normal" }
+            },
+            "unit": "short"
+          }
+        },
+        "options": {
+          "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["sum", "mean"] },
+          "tooltip": { "mode": "multi" }
+        }
+      },
+      {
+        "id": 5,
+        "title": "Requests by Claw (Daily)",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 24 },
+        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
+        "targets": [
+          {
+            "refId": "A",
+            "type": "json",
+            "source": "url",
+            "url": "http://10.255.245.162:3000/api/grafana/usage",
+            "url_options": { "method": "GET" },
+            "columns": [
+              { "selector": "time", "text": "Time", "type": "timestamp" },
+              { "selector": "claw", "text": "Claw", "type": "string" },
+              { "selector": "requests", "text": "Requests", "type": "number" }
+            ],
+            "format": "timeseries"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": { "drawStyle": "bars", "fillOpacity": 80, "stacking": { "mode": "normal" } }
+          }
+        },
+        "options": {
+          "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["sum"] }
+        }
+      },
+      {
+        "id": 6,
+        "title": "Cost by Claw (Daily)",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 24 },
+        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
+        "targets": [
+          {
+            "refId": "A",
+            "type": "json",
+            "source": "url",
+            "url": "http://10.255.245.162:3000/api/grafana/usage",
+            "url_options": { "method": "GET" },
+            "columns": [
+              { "selector": "time", "text": "Time", "type": "timestamp" },
+              { "selector": "claw", "text": "Claw", "type": "string" },
+              { "selector": "cost", "text": "Cost ($)", "type": "number" }
+            ],
+            "format": "timeseries"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": { "drawStyle": "bars", "fillOpacity": 80, "stacking": { "mode": "normal" } },
+            "unit": "currencyUSD"
+          }
+        },
+        "options": {
+          "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["sum"] }
+        }
+      },
+      {
+        "id": 7,
+        "title": "Prompts per Hour (All Bots)",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 32 },
+        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
+        "targets": [
+          {
+            "refId": "A",
+            "type": "json",
+            "source": "url",
+            "url": "http://10.255.245.162:3000/api/grafana/prompts",
+            "url_options": { "method": "GET" },
+            "root_selector": "rows",
+            "columns": [
+              { "selector": "time", "text": "Time", "type": "timestamp" },
+              { "selector": "claw_name", "text": "Claw", "type": "string" },
+              { "selector": "count", "text": "Prompts", "type": "number" }
+            ],
+            "format": "timeseries"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": { "drawStyle": "bars", "fillOpacity": 60, "stacking": { "mode": "normal" } }
+          }
+        },
+        "options": {
+          "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["sum"] }
+        }
+      },
+      {
+        "id": 8,
+        "title": "Prompt Summary by Bot",
+        "type": "piechart",
+        "gridPos": { "h": 8, "w": 8, "x": 0, "y": 40 },
+        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
+        "targets": [
+          {
+            "refId": "A",
+            "type": "json",
+            "source": "url",
+            "url": "http://10.255.245.162:3000/api/grafana/prompts",
+            "url_options": { "method": "GET" },
+            "root_selector": "summary",
+            "columns": [
+              { "selector": "claw_name", "text": "Bot", "type": "string" },
+              { "selector": "total_prompts", "text": "Total Prompts", "type": "number" }
+            ],
+            "format": "table"
+          }
+        ],
+        "options": {
+          "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] },
+          "pieType": "donut"
+        }
+      },
+      {
+        "id": 9,
+        "title": "Active Hours by Bot",
+        "type": "bargauge",
+        "gridPos": { "h": 8, "w": 8, "x": 8, "y": 40 },
+        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
+        "targets": [
+          {
+            "refId": "A",
+            "type": "json",
+            "source": "url",
+            "url": "http://10.255.245.162:3000/api/grafana/prompts",
+            "url_options": { "method": "GET" },
+            "root_selector": "summary",
+            "columns": [
+              { "selector": "claw_name", "text": "Bot", "type": "string" },
+              { "selector": "active_hours", "text": "Active Hours", "type": "number" }
+            ],
+            "format": "table"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": { "mode": "absolute", "steps": [{ "value": null, "color": "blue" }, { "value": 20, "color": "green" }, { "value": 40, "color": "yellow" }] }
+          }
+        },
+        "options": { "orientation": "horizontal", "displayMode": "gradient" }
+      },
+      {
+        "id": 10,
+        "title": "Sessions per Day",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 8, "x": 16, "y": 40 },
+        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
+        "targets": [
+          {
+            "refId": "A",
+            "type": "json",
+            "source": "url",
+            "url": "http://10.255.245.162:3000/api/grafana/sessions",
+            "url_options": { "method": "GET" },
+            "columns": [
+              { "selector": "time", "text": "Time", "type": "timestamp" },
+              { "selector": "session_count", "text": "Sessions", "type": "number" }
+            ],
+            "format": "timeseries"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": { "drawStyle": "bars", "fillOpacity": 80 },
+            "color": { "mode": "fixed", "fixedColor": "purple" }
+          }
+        }
+      },
+      {
+        "id": 11,
+        "title": "Disk Usage by Bot",
+        "type": "bargauge",
+        "gridPos": { "h": 6, "w": 12, "x": 0, "y": 48 },
+        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
+        "targets": [
+          {
+            "refId": "A",
+            "type": "json",
+            "source": "url",
+            "url": "http://10.255.245.162:3000/api/grafana/claws",
+            "url_options": { "method": "GET" },
+            "columns": [
+              { "selector": "claw", "text": "Bot", "type": "string" },
+              { "selector": "disk_percent", "text": "Disk %", "type": "number" }
+            ],
+            "format": "table"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "max": 100,
+            "min": 0,
+            "unit": "percent",
+            "thresholds": { "mode": "absolute", "steps": [{ "value": null, "color": "green" }, { "value": 70, "color": "yellow" }, { "value": 85, "color": "red" }] }
+          }
+        },
+        "options": { "orientation": "horizontal", "displayMode": "gradient" }
+      },
+      {
+        "id": 12,
+        "title": "Token Breakdown (Input vs Output)",
+        "type": "timeseries",
+        "gridPos": { "h": 6, "w": 12, "x": 12, "y": 48 },
+        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
+        "targets": [
+          {
+            "refId": "A",
+            "type": "json",
+            "source": "url",
+            "url": "http://10.255.245.162:3000/api/grafana/usage",
+            "url_options": { "method": "GET" },
+            "columns": [
+              { "selector": "time", "text": "Time", "type": "timestamp" },
+              { "selector": "claw", "text": "Claw", "type": "string" },
+              { "selector": "input_tokens", "text": "Input Tokens", "type": "number" },
+              { "selector": "output_tokens", "text": "Output Tokens", "type": "number" }
+            ],
+            "format": "timeseries"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": { "drawStyle": "line", "fillOpacity": 30 }
+          }
+        },
+        "options": {
+          "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["sum"] }
+        }
+      }
+    ]
+  },
+  "folderId": 0,
+  "overwrite": true
+}
