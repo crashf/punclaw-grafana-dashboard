@@ -1,426 +1,456 @@
 {
-  "dashboard": {
-    "title": "PunClaw Fleet Overview",
-    "uid": "punclaw-fleet",
-    "tags": ["punclaw", "fleet", "agents"],
-    "timezone": "browser",
-    "refresh": "5m",
-    "time": {
-      "from": "now-7d",
-      "to": "now"
-    },
-    "templating": {
-      "list": [
-        {
-          "name": "claw",
-          "type": "custom",
-          "label": "Bot",
-          "query": "Bretts Claw,Mai's Claw,Piotrs Claw,Waynes Claw,punaioff-CEDRIC,punaioff-ROB",
-          "multi": true,
-          "includeAll": true,
-          "allValue": "",
-          "refresh": 0
-        }
-      ]
-    },
-    "panels": [
+  "annotations": {
+    "list": [
       {
-        "id": 1,
-        "title": "Fleet Status",
-        "type": "table",
-        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 0 },
-        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
-        "targets": [
-          {
-            "refId": "A",
-            "type": "json",
-            "source": "url",
-            "url": "http://10.255.245.162:3000/api/grafana/claws",
-            "url_options": { "method": "GET" },
-            "columns": [
-              { "selector": "claw", "text": "Bot", "type": "string" },
-              { "selector": "status", "text": "Status", "type": "string" },
-              { "selector": "cpu", "text": "CPU %", "type": "number" },
-              { "selector": "mem_percent", "text": "Memory %", "type": "number" },
-              { "selector": "disk_percent", "text": "Disk %", "type": "number" },
-              { "selector": "mem_used_gb", "text": "Mem Used (GB)", "type": "number" },
-              { "selector": "disk_used_gb", "text": "Disk Used (GB)", "type": "number" },
-              { "selector": "ip", "text": "IP", "type": "string" },
-              { "selector": "time", "text": "Last Seen", "type": "timestamp" }
-            ],
-            "format": "table"
-          }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "custom": { "align": "auto" }
-          },
-          "overrides": [
-            {
-              "matcher": { "id": "byName", "options": "Status" },
-              "properties": [
-                {
-                  "id": "mappings",
-                  "value": [
-                    { "type": "value", "options": { "up": { "text": "🟢 Online", "color": "green" }, "down": { "text": "🔴 Offline", "color": "red" } } }
-                  ]
-                }
-              ]
-            },
-            {
-              "matcher": { "id": "byName", "options": "CPU %" },
-              "properties": [
-                { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "value": null, "color": "green" }, { "value": 70, "color": "yellow" }, { "value": 90, "color": "red" }] } },
-                { "id": "custom.displayMode", "value": "color-background" }
-              ]
-            },
-            {
-              "matcher": { "id": "byName", "options": "Memory %" },
-              "properties": [
-                { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "value": null, "color": "green" }, { "value": 70, "color": "yellow" }, { "value": 90, "color": "red" }] } },
-                { "id": "custom.displayMode", "value": "color-background" }
-              ]
-            },
-            {
-              "matcher": { "id": "byName", "options": "Disk %" },
-              "properties": [
-                { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "value": null, "color": "green" }, { "value": 70, "color": "yellow" }, { "value": 85, "color": "red" }] } },
-                { "id": "custom.displayMode", "value": "color-background" }
-              ]
-            }
-          ]
-        }
-      },
-      {
-        "id": 2,
-        "title": "CPU by Bot",
-        "type": "gauge",
-        "gridPos": { "h": 6, "w": 12, "x": 0, "y": 8 },
-        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
-        "targets": [
-          {
-            "refId": "A",
-            "type": "json",
-            "source": "url",
-            "url": "http://10.255.245.162:3000/api/grafana/claws",
-            "url_options": { "method": "GET" },
-            "columns": [
-              { "selector": "claw", "text": "Bot", "type": "string" },
-              { "selector": "cpu", "text": "CPU", "type": "number" }
-            ],
-            "format": "table"
-          }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "max": 100,
-            "min": 0,
-            "unit": "percent",
-            "thresholds": { "mode": "absolute", "steps": [{ "value": null, "color": "green" }, { "value": 70, "color": "yellow" }, { "value": 90, "color": "red" }] }
-          }
-        }
-      },
-      {
-        "id": 3,
-        "title": "Memory by Bot",
-        "type": "gauge",
-        "gridPos": { "h": 6, "w": 12, "x": 12, "y": 8 },
-        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
-        "targets": [
-          {
-            "refId": "A",
-            "type": "json",
-            "source": "url",
-            "url": "http://10.255.245.162:3000/api/grafana/claws",
-            "url_options": { "method": "GET" },
-            "columns": [
-              { "selector": "claw", "text": "Bot", "type": "string" },
-              { "selector": "mem_percent", "text": "Memory", "type": "number" }
-            ],
-            "format": "table"
-          }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "max": 100,
-            "min": 0,
-            "unit": "percent",
-            "thresholds": { "mode": "absolute", "steps": [{ "value": null, "color": "green" }, { "value": 70, "color": "yellow" }, { "value": 90, "color": "red" }] }
-          }
-        }
-      },
-      {
-        "id": 4,
-        "title": "Total Tokens by Claw (Daily)",
-        "type": "timeseries",
-        "gridPos": { "h": 10, "w": 24, "x": 0, "y": 14 },
-        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
-        "targets": [
-          {
-            "refId": "A",
-            "type": "json",
-            "source": "url",
-            "url": "http://10.255.245.162:3000/api/grafana/usage",
-            "url_options": { "method": "GET" },
-            "columns": [
-              { "selector": "time", "text": "Time", "type": "timestamp" },
-              { "selector": "claw", "text": "Claw", "type": "string" },
-              { "selector": "total_tokens", "text": "Total Tokens", "type": "number" }
-            ],
-            "format": "timeseries"
-          }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "custom": {
-              "drawStyle": "bars",
-              "fillOpacity": 80,
-              "stacking": { "mode": "normal" }
-            },
-            "unit": "short"
-          }
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
         },
-        "options": {
-          "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["sum", "mean"] },
-          "tooltip": { "mode": "multi" }
-        }
-      },
-      {
-        "id": 5,
-        "title": "Requests by Claw (Daily)",
-        "type": "timeseries",
-        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 24 },
-        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
-        "targets": [
-          {
-            "refId": "A",
-            "type": "json",
-            "source": "url",
-            "url": "http://10.255.245.162:3000/api/grafana/usage",
-            "url_options": { "method": "GET" },
-            "columns": [
-              { "selector": "time", "text": "Time", "type": "timestamp" },
-              { "selector": "claw", "text": "Claw", "type": "string" },
-              { "selector": "requests", "text": "Requests", "type": "number" }
-            ],
-            "format": "timeseries"
-          }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "custom": { "drawStyle": "bars", "fillOpacity": 80, "stacking": { "mode": "normal" } }
-          }
-        },
-        "options": {
-          "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["sum"] }
-        }
-      },
-      {
-        "id": 6,
-        "title": "Cost by Claw (Daily)",
-        "type": "timeseries",
-        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 24 },
-        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
-        "targets": [
-          {
-            "refId": "A",
-            "type": "json",
-            "source": "url",
-            "url": "http://10.255.245.162:3000/api/grafana/usage",
-            "url_options": { "method": "GET" },
-            "columns": [
-              { "selector": "time", "text": "Time", "type": "timestamp" },
-              { "selector": "claw", "text": "Claw", "type": "string" },
-              { "selector": "cost", "text": "Cost ($)", "type": "number" }
-            ],
-            "format": "timeseries"
-          }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "custom": { "drawStyle": "bars", "fillOpacity": 80, "stacking": { "mode": "normal" } },
-            "unit": "currencyUSD"
-          }
-        },
-        "options": {
-          "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["sum"] }
-        }
-      },
-      {
-        "id": 7,
-        "title": "Prompts per Hour (All Bots)",
-        "type": "timeseries",
-        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 32 },
-        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
-        "targets": [
-          {
-            "refId": "A",
-            "type": "json",
-            "source": "url",
-            "url": "http://10.255.245.162:3000/api/grafana/prompts",
-            "url_options": { "method": "GET" },
-            "root_selector": "rows",
-            "columns": [
-              { "selector": "time", "text": "Time", "type": "timestamp" },
-              { "selector": "claw_name", "text": "Claw", "type": "string" },
-              { "selector": "count", "text": "Prompts", "type": "number" }
-            ],
-            "format": "timeseries"
-          }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "custom": { "drawStyle": "bars", "fillOpacity": 60, "stacking": { "mode": "normal" } }
-          }
-        },
-        "options": {
-          "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["sum"] }
-        }
-      },
-      {
-        "id": 8,
-        "title": "Prompt Summary by Bot",
-        "type": "piechart",
-        "gridPos": { "h": 8, "w": 8, "x": 0, "y": 40 },
-        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
-        "targets": [
-          {
-            "refId": "A",
-            "type": "json",
-            "source": "url",
-            "url": "http://10.255.245.162:3000/api/grafana/prompts",
-            "url_options": { "method": "GET" },
-            "root_selector": "summary",
-            "columns": [
-              { "selector": "claw_name", "text": "Bot", "type": "string" },
-              { "selector": "total_prompts", "text": "Total Prompts", "type": "number" }
-            ],
-            "format": "table"
-          }
-        ],
-        "options": {
-          "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] },
-          "pieType": "donut"
-        }
-      },
-      {
-        "id": 9,
-        "title": "Active Hours by Bot",
-        "type": "bargauge",
-        "gridPos": { "h": 8, "w": 8, "x": 8, "y": 40 },
-        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
-        "targets": [
-          {
-            "refId": "A",
-            "type": "json",
-            "source": "url",
-            "url": "http://10.255.245.162:3000/api/grafana/prompts",
-            "url_options": { "method": "GET" },
-            "root_selector": "summary",
-            "columns": [
-              { "selector": "claw_name", "text": "Bot", "type": "string" },
-              { "selector": "active_hours", "text": "Active Hours", "type": "number" }
-            ],
-            "format": "table"
-          }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "thresholds": { "mode": "absolute", "steps": [{ "value": null, "color": "blue" }, { "value": 20, "color": "green" }, { "value": 40, "color": "yellow" }] }
-          }
-        },
-        "options": { "orientation": "horizontal", "displayMode": "gradient" }
-      },
-      {
-        "id": 10,
-        "title": "Sessions per Day",
-        "type": "timeseries",
-        "gridPos": { "h": 8, "w": 8, "x": 16, "y": 40 },
-        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
-        "targets": [
-          {
-            "refId": "A",
-            "type": "json",
-            "source": "url",
-            "url": "http://10.255.245.162:3000/api/grafana/sessions",
-            "url_options": { "method": "GET" },
-            "columns": [
-              { "selector": "time", "text": "Time", "type": "timestamp" },
-              { "selector": "session_count", "text": "Sessions", "type": "number" }
-            ],
-            "format": "timeseries"
-          }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "custom": { "drawStyle": "bars", "fillOpacity": 80 },
-            "color": { "mode": "fixed", "fixedColor": "purple" }
-          }
-        }
-      },
-      {
-        "id": 11,
-        "title": "Disk Usage by Bot",
-        "type": "bargauge",
-        "gridPos": { "h": 6, "w": 12, "x": 0, "y": 48 },
-        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
-        "targets": [
-          {
-            "refId": "A",
-            "type": "json",
-            "source": "url",
-            "url": "http://10.255.245.162:3000/api/grafana/claws",
-            "url_options": { "method": "GET" },
-            "columns": [
-              { "selector": "claw", "text": "Bot", "type": "string" },
-              { "selector": "disk_percent", "text": "Disk %", "type": "number" }
-            ],
-            "format": "table"
-          }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "max": 100,
-            "min": 0,
-            "unit": "percent",
-            "thresholds": { "mode": "absolute", "steps": [{ "value": null, "color": "green" }, { "value": 70, "color": "yellow" }, { "value": 85, "color": "red" }] }
-          }
-        },
-        "options": { "orientation": "horizontal", "displayMode": "gradient" }
-      },
-      {
-        "id": 12,
-        "title": "Token Breakdown (Input vs Output)",
-        "type": "timeseries",
-        "gridPos": { "h": 6, "w": 12, "x": 12, "y": 48 },
-        "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "dfgs4kylnfawwb" },
-        "targets": [
-          {
-            "refId": "A",
-            "type": "json",
-            "source": "url",
-            "url": "http://10.255.245.162:3000/api/grafana/usage",
-            "url_options": { "method": "GET" },
-            "columns": [
-              { "selector": "time", "text": "Time", "type": "timestamp" },
-              { "selector": "claw", "text": "Claw", "type": "string" },
-              { "selector": "input_tokens", "text": "Input Tokens", "type": "number" },
-              { "selector": "output_tokens", "text": "Output Tokens", "type": "number" }
-            ],
-            "format": "timeseries"
-          }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "custom": { "drawStyle": "line", "fillOpacity": 30 }
-          }
-        },
-        "options": {
-          "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["sum"] }
-        }
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
       }
     ]
   },
-  "folderId": 0,
-  "overwrite": true
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 169,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "efepewosiqxvkd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false,
+            "minWidth": 80
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Metric"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 280
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "auto"
+                }
+              },
+              {
+                "id": "unit",
+                "value": "string"
+              },
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "targetBlank": false,
+                    "title": "View financial details",
+                    "url": "/d/goals-drilldown/last-week-in-review-e28094-drill-down"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Target"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 90
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "auto"
+                }
+              },
+              {
+                "id": "unit",
+                "value": "string"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/^\\d+\\/\\d+$/"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": []
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "WITH weeks AS (\n  SELECT week_date, ROW_NUMBER() OVER (ORDER BY week_date DESC) as rn\n  FROM (SELECT DISTINCT week_date FROM scorecard_financials) sub\n),\nbase AS (\n  SELECT f.metric_name, f.target_value, w.rn, f.value,\n    CASE\n      WHEN f.metric_name = 'Weekly Recurring Revenue' AND f.value > 15390 THEN f.value\n      WHEN f.metric_name = 'Weekly One-time Revenue' AND f.value > 23075 THEN f.value\n      WHEN f.metric_name = 'Accounts Receivable (over 90 days)' AND f.value <= 40000 THEN f.value\n      ELSE -f.value\n    END AS cv\n  FROM scorecard_financials f\n  JOIN weeks w ON w.week_date = f.week_date WHERE w.rn <= 8\n)\nSELECT\n  metric_name AS \"Metric\",\n  MAX(target_value) AS \"Target\",\n  MAX(CASE WHEN rn=8 THEN cv END) AS \"2/3\",\n  MAX(CASE WHEN rn=7 THEN cv END) AS \"2/10\",\n  MAX(CASE WHEN rn=6 THEN cv END) AS \"2/17\",\n  MAX(CASE WHEN rn=5 THEN cv END) AS \"2/24\",\n  MAX(CASE WHEN rn=4 THEN cv END) AS \"3/3\",\n  MAX(CASE WHEN rn=3 THEN cv END) AS \"3/10\",\n  MAX(CASE WHEN rn=2 THEN cv END) AS \"3/17\",\n  MAX(CASE WHEN rn=1 THEN cv END) AS \"3/24\"\nFROM base\nGROUP BY metric_name, target_value\nORDER BY CASE metric_name\n  WHEN 'Weekly Recurring Revenue' THEN 1\n  WHEN 'Weekly One-time Revenue' THEN 2\n  WHEN 'Accounts Receivable (over 90 days)' THEN 3\nEND",
+          "refId": "A"
+        }
+      ],
+      "title": "\ud83d\udcb0 Financial",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "uid": "efepewosiqxvkd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "Drilldown: Sales",
+              "url": "/d/sc-drill-opps/scorecard-opportunities"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Metric"
+            },
+            "properties": [
+              {
+                "id": "custom.align",
+                "value": "left"
+              },
+              {
+                "id": "custom.width",
+                "value": 220
+              },
+              {
+                "id": "links",
+                "value": []
+              },
+              {
+                "id": "custom.filterable",
+                "value": false
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
+      "id": 3,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "WITH ranked AS (\n  SELECT week_start, ROW_NUMBER() OVER (ORDER BY week_start DESC) as rn\n  FROM (SELECT DISTINCT week_start FROM scorecard_weekly WHERE section = 'sales') sub\n)\nSELECT\n  CASE s.metric_name\n    WHEN 'open_opportunities' THEN 'Open Opportunities'\n    WHEN 'opps_closed' THEN 'Opps Closed Last Week'\n    WHEN 'opps_won' THEN 'Opps Won Last Week'\n    WHEN 'won_revenue' THEN 'Won Revenue ($)'\n    WHEN 'open_opps_revenue' THEN 'Revenue on Open Opps ($)'\n  END AS \"Metric\",\n  MAX(CASE WHEN rn=8 THEN metric_value END) AS \"2/10\",\n  MAX(CASE WHEN rn=7 THEN metric_value END) AS \"2/17\",\n  MAX(CASE WHEN rn=6 THEN metric_value END) AS \"2/24\",\n  MAX(CASE WHEN rn=5 THEN metric_value END) AS \"3/3\",\n  MAX(CASE WHEN rn=4 THEN metric_value END) AS \"3/10\",\n  MAX(CASE WHEN rn=3 THEN metric_value END) AS \"3/17\",\n  MAX(CASE WHEN rn=2 THEN metric_value END) AS \"3/24\",\n  MAX(CASE WHEN rn=1 THEN metric_value END) AS \"3/31\"\nFROM scorecard_weekly s\nJOIN ranked r ON r.week_start = s.week_start\nWHERE s.section = 'sales'\n  AND s.metric_name IN ('open_opportunities','opps_closed','opps_won','won_revenue','open_opps_revenue')\n  AND r.rn <= 8\nGROUP BY s.metric_name\nORDER BY CASE s.metric_name\n    WHEN 'open_opportunities' THEN 1\n    WHEN 'opps_closed' THEN 2\n    WHEN 'opps_won' THEN 3\n    WHEN 'won_revenue' THEN 4\n    WHEN 'open_opps_revenue' THEN 5\nEND",
+          "refId": "A"
+        }
+      ],
+      "title": "Sales",
+      "transformations": [],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "uid": "efepewosiqxvkd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "Drilldown: Customer Service",
+              "url": "/d/sc-drill-tickets/scorecard-open-tickets"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Metric"
+            },
+            "properties": [
+              {
+                "id": "custom.align",
+                "value": "left"
+              },
+              {
+                "id": "custom.width",
+                "value": 220
+              },
+              {
+                "id": "links",
+                "value": []
+              },
+              {
+                "id": "custom.filterable",
+                "value": false
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "id": 1,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "WITH ranked AS (\n  SELECT week_start, ROW_NUMBER() OVER (ORDER BY week_start DESC) as rn\n  FROM (SELECT DISTINCT week_start FROM scorecard_weekly WHERE section = 'customer_service') sub\n)\nSELECT\n  CASE s.metric_name\n    WHEN 'open_tickets' THEN 'Current Open Tickets'\n    WHEN 'kill_rate_7d' THEN 'Kill Rate Last 7 Days (%)'\n    WHEN 'kill_rate_14d' THEN 'Kill Rate Last 14 Days (%)'\n    WHEN 'sla_pct_30d' THEN '% SLA Met - Last 30 Days'\n    WHEN 'total_hours' THEN 'Tech Actual Hours'\n  END AS \"Metric\",\n  MAX(CASE WHEN rn=8 THEN metric_value END) AS \"2/10\",\n  MAX(CASE WHEN rn=7 THEN metric_value END) AS \"2/17\",\n  MAX(CASE WHEN rn=6 THEN metric_value END) AS \"2/24\",\n  MAX(CASE WHEN rn=5 THEN metric_value END) AS \"3/3\",\n  MAX(CASE WHEN rn=4 THEN metric_value END) AS \"3/10\",\n  MAX(CASE WHEN rn=3 THEN metric_value END) AS \"3/17\",\n  MAX(CASE WHEN rn=2 THEN metric_value END) AS \"3/24\",\n  MAX(CASE WHEN rn=1 THEN metric_value END) AS \"3/31\"\nFROM scorecard_weekly s\nJOIN ranked r ON r.week_start = s.week_start\nWHERE s.section = 'customer_service'\n  AND s.metric_name IN ('open_tickets','kill_rate_7d','kill_rate_14d','sla_pct_30d','total_hours')\n  AND r.rn <= 8\nGROUP BY s.metric_name\nORDER BY CASE s.metric_name\n    WHEN 'open_tickets' THEN 1\n    WHEN 'kill_rate_7d' THEN 2\n    WHEN 'kill_rate_14d' THEN 3\n    WHEN 'sla_pct_30d' THEN 4\n    WHEN 'total_hours' THEN 5\nEND",
+          "refId": "A"
+        }
+      ],
+      "title": "Customer Service",
+      "transformations": [],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "uid": "efepewosiqxvkd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "Drilldown: Projects",
+              "url": "/d/sc-drill-projects/scorecard-projects"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Metric"
+            },
+            "properties": [
+              {
+                "id": "custom.align",
+                "value": "left"
+              },
+              {
+                "id": "custom.width",
+                "value": 220
+              },
+              {
+                "id": "links",
+                "value": []
+              },
+              {
+                "id": "custom.filterable",
+                "value": false
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 4,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "WITH ranked AS (\n  SELECT week_start, ROW_NUMBER() OVER (ORDER BY week_start DESC) as rn\n  FROM (SELECT DISTINCT week_start FROM scorecard_weekly WHERE section = 'projects') sub\n)\nSELECT\n  CASE s.metric_name\n    WHEN 'open_projects' THEN 'Open Projects'\n    WHEN 'budgeted_hours' THEN 'Budgeted Hours'\n    WHEN 'actual_project_hours' THEN 'Actual Hours'\n  END AS \"Metric\",\n  MAX(CASE WHEN rn=8 THEN metric_value END) AS \"2/10\",\n  MAX(CASE WHEN rn=7 THEN metric_value END) AS \"2/17\",\n  MAX(CASE WHEN rn=6 THEN metric_value END) AS \"2/24\",\n  MAX(CASE WHEN rn=5 THEN metric_value END) AS \"3/3\",\n  MAX(CASE WHEN rn=4 THEN metric_value END) AS \"3/10\",\n  MAX(CASE WHEN rn=3 THEN metric_value END) AS \"3/17\",\n  MAX(CASE WHEN rn=2 THEN metric_value END) AS \"3/24\",\n  MAX(CASE WHEN rn=1 THEN metric_value END) AS \"3/31\"\nFROM scorecard_weekly s\nJOIN ranked r ON r.week_start = s.week_start\nWHERE s.section = 'projects'\n  AND s.metric_name IN ('open_projects','budgeted_hours','actual_project_hours')\n  AND r.rn <= 8\nGROUP BY s.metric_name\nORDER BY CASE s.metric_name\n    WHEN 'open_projects' THEN 1\n    WHEN 'budgeted_hours' THEN 2\n    WHEN 'actual_project_hours' THEN 3\nEND",
+          "refId": "A"
+        }
+      ],
+      "title": "Projects",
+      "transformations": [],
+      "type": "table"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 42,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Management Meeting Scorecard",
+  "uid": "mgmt-scorecard",
+  "version": 45,
+  "weekStart": ""
 }
