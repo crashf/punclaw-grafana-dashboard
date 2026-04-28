@@ -21,6 +21,12 @@ Pund-IT management meeting scorecard — Grafana dashboard + n8n workflows.
 
 ## Fix Log
 
+### 2026-04-26 — Dashboard Folder Fix
+- Fixed Financial Sheet Sync workflow to include `folderId: 176` when updating Grafana dashboard
+- Dashboard now stays in Management folder after each sync (was moving to General)
+- Exported current n8n workflows to `workflows/current/`
+- Updated n8n/Grafana skills with working API access details
+
 ### 2026-03-31 — Dashboard Overhaul (Fixes 1–15)
 1. Financial panel — dynamic date headers (replaced hardcoded dates)
 2. Financial Sheet Sync — auto-updates Grafana Financial panel headers after sync
